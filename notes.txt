@@ -1,4 +1,0 @@
-Dit werkt niet:
-
-Juriconnect links naar Uitvoeringsregeling werknemersspaarregelingen en winstdelingsregelingen (geeft 404 melding op wetten.overheid.nl)
-Export naar Excel van Successiewet en enkele andere NFLT-thema's (komt door onvolkomenheden in de fiscale taxonomie)
