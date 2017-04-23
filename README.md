@@ -10,4 +10,4 @@ Features of the prototype include:
 3. Fuzzy search and exact search of terms in the taxonomy
 4. Export a portion of the taxonomy to Excel, starting from the current topic in view
 
-Due to inconsistensies in the taxonomy, the export function does nog function for all topics.
+Due to inconsistensies in the taxonomy, the export function does not function for all topics.
