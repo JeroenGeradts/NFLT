@@ -1,7 +1,7 @@
 # NFLT
 Taxonomy Manager by Jeroen Geradts is licensed under a Creative Commons Attribution 4.0 International License.
 
-This prototype contains the Dutch Fiscal Learning Topics Taxonomy ("Nederlandse Fiscale Leerstukken Taxonomie"), version December 21st, 2016.
+This prototype contains the Dutch Fiscal Learning Topics Taxonomy ("Nederlandse Fiscale Leerstukken Taxonomie"), version December 21st, 2016. (https://fiscaletaxonomie.pleio.nl/groups/profile/27982362/download)
 
 Features of the prototype include:
 
