@@ -9,5 +9,6 @@ Features of the prototype include:
 2. Deeplink to topics in the taxonomy
 3. Fuzzy search and exact search of terms in the taxonomy
 4. Export a portion of the taxonomy to Excel, starting from the current topic in view
+5. Automatically tag the content html, txt, rdf and csv files against the taxonomy
 
 Due to inconsistensies in the taxonomy, the export function does not function for all topics.
