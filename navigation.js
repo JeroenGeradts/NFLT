@@ -11,9 +11,9 @@ window.onload=function(){//screen set-up
    var d = [[60,0],[0,60]];
    for (var e in a) document.body.appendChild($$(a[e],b[e],'','','','',c[e],'','','','','',d[e]));
 
-   var a = ['i','i'];
-   var b = ['fa-home','fa-excel'];
-   var c = ['fa fa-home w3-xlarge w3-padding w3-opennav','fa fa-file-excel-o w3-xlarge w3-padding'];
+   var a = ['i','i','i'];
+   var b = ['fa-home','fa-tags','fa-excel'];
+   var c = ['fa fa-home w3-xlarge w3-padding w3-opennav','fa fa-tags w3-xlarge w3-padding','fa fa-file-excel-o w3-xlarge w3-padding'];
    for (var d in a) $('sidebar').appendChild($$(a[d],b[d],'','','','',c[d]));
 
    var a = ['header','div','div','div','footer'];
@@ -144,6 +144,43 @@ function contentStart(){
 	location.hash = location.hash.split('#')[0];
 	sidemenuChange('Consult');
 }
+function fileClassify(content,name){//extract metadata from website-pages
+	var title = $title(content);
+	result.appendChild($text('bestand: ' + name));
+	result.appendChild($$('br'));
+	result.appendChild($text('titel: ' + title));
+	result.appendChild($$('br'));
+	result.appendChild($text('mogelijke tags: '));
+	result.appendChild($$('br'));
+	var a = $tags(content,title);
+	var b = [];
+	for (var c in a){
+		var d = a[c][0];//tag id
+		var e = [d];
+		while (nflt[d][bt] != 446075){
+			d = nflt[d][bt];
+			e.push(d);
+		}
+		for (var f=0; f<a[c][1]; f++) b = b.concat(e);
+	}
+	var g = $count(b);
+	for (var h in g){
+		if (g[h][1] < 30) break;
+		var i = $$('span',g[h][0],'','','','','w3-hover-text-blue',popupShow,'#' + nflt[g[h][0]][pt].split('(')[0].trim().replace(/ /g,'-'));
+		i.style.fontSize = Math.round(g[h][1]/3) + 'px';
+		i.appendChild($text(' '));
+		result.appendChild(i);
+	}
+	result.appendChild($$('br'));
+	result.appendChild($$('hr'));
+   var next = filenames.indexOf(name) + 1;
+   if (next < files.length) fileLoad(filenames[next],files[next]);
+   else{
+		$('content').style.height = $space() + 'px';
+		$('content').style.overflow = 'auto';
+		$('content').appendChild(result);
+	}
+}
 function fileExport(){
 	var a = Number(location.hash.replace('#',''));
    switch(this.title){
@@ -180,6 +217,36 @@ function fileExport(){
 			break;
 	}
 }
+function fileLoad(name,file){//load file in FileReader for extracting tags
+	var a = new FileReader();
+	a.onload = function(evt){fileClassify(evt.target.result,name)};
+	a.readAsText(file);		
+}
+function fileLoadNext(evt){
+   files = evt.target.files;
+	filenames = [];
+	result = $$('span');
+	for (var a=0; a<files.length; a++) filenames.push(files[a].name);
+	fileLoad(filenames[0],files[0]);
+}
+function fileLoadStart(){//start or end capture new content
+	$empty($('tags'));
+	$empty($('content'));
+	$empty($('input'));
+   switch(this.title){
+		case 'Zoek tags':
+         window.addEventListener('keydown',$key,false);
+         this.style.color = 'lightgreen';
+			$('input').style.display = '';
+			$('input').appendChild($$('input','','','file','','','','','',fileLoadNext,'',true));
+         sidemenuChange('Classify');
+         break;
+      case 'Terug naar raadplegen taxonomie':
+         this.style.color = '';
+			location.reload();
+         break;
+   }
+}
 function hyperlinkOpenJuriconnect(){
 	switch(isNaN(Number(this.id))){
 		case true:
@@ -189,6 +256,40 @@ function hyperlinkOpenJuriconnect(){
 			window.open('http://wetten.overheid.nl/' + nflt[this.id][jci]);
 			break;
 	}
+}
+function popupClose(){
+	$('content').removeChild($('content').lastChild);
+}
+function popupShow(){
+	var array = nflt;
+	var a = $$('div','popup','','','','','w3-modal',popupClose);
+	var b = $$('div','','','','','','w3-modal-content');
+	var c = $$('div','','','','','','w3-container-padding');
+	c.appendChild($$('i','','','','','','fa fa-close w3-padding w3-display-topright'));
+	c.appendChild($$('header','','','','','','w3-container w3-padding w3-theme-l4','',array[this.id][pt]));
+	var d = $$('ul');
+	for (var e in array[this.id]){
+		var f = array[this.id][e];
+		if (f == 0) continue;
+		var g = ['Voorkeursterm','Synoniem','Algemenere term','Specifiekere term','Gerelateerde term','Juriconnect','Leerstuk','Beschrijving'][e];
+		switch(typeof(f)){
+			case 'number':
+				d.appendChild($$('li',f,'','','','','w3-text-grey','',g + ': ' + array[f][pt]));
+				break;
+			case 'string':
+				d.appendChild($$('li',f,'','','','','w3-text-grey','',g + ': ' + f));
+				break;
+			case 'object':
+				for (var h in f)(typeof(f[h]) == 'string')? d.appendChild($$('li',f[h],'','','','','w3-text-grey','',g + ': ' + f[h])) : d.appendChild($$('li',f[h],'','','','','w3-text-grey','',g + ': ' + array[f[h]][pt]));
+				break;
+		}
+	}
+	c.appendChild(d);
+	b.appendChild(c);
+	a.appendChild(b);
+	a.style.display = 'block';
+	a.style.marginLeft = '60px';
+	$('content').appendChild(a);
 }
 function searchboxCheck(){//do the search again when changing the search type (Exact search or not)
 	searchboxFind.call($('searchbox'));//http://keycode.info/		
@@ -251,13 +352,18 @@ function searchboxShowResults(array,item){
 function sidemenuChange(a){//change color and function of icons in accordance with context a
 	$context(a);
 	//standard behaviour
-   var icons = ['fa-home','fa-excel'];
-   var active = [1,0];
-   var title = ['Home','Exporteer naar Excel'];
-   var click = [contentStart,fileExport];
+   var icons = ['fa-home','fa-tags','fa-excel'];
+   var active = [1,1,0];
+   var title = ['Home','Zoek tags','Exporteer naar Excel'];
+   var click = [contentStart,fileLoadStart,fileExport];
    var ho = icons.indexOf('fa-home');
+   var tg = icons.indexOf('fa-tags');
    var ex = icons.indexOf('fa-excel');
    switch(a){//exceptions from standard behaviour depending on context a
+      case 'Classify':
+			var active = [0,1,0];
+			title[tg] = 'Terug naar raadplegen taxonomie';
+			break;
       case 'Consult':
 			if (!$('searchresult') == false) if ($children($('searchresult')).length == 1) active[ex] = 1;
          break;
