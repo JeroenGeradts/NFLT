@@ -10,11 +10,3 @@ Features of the prototype include:
 3. Fuzzy search and exact search of terms in the taxonomy
 4. Export a portion of the taxonomy to Excel, starting from the current topic in view
 5. Automatically tag the content of html-, txt-, rdf- and csv-files against the preferred terms and synonyms in the taxonomy
-
-Remarks regarding the NFLT-taxonomy:
-
-Ad 1. You can encounter the same title multiple times while navigating or searching as some preferred terms in the taxonomy are not unique
-Ad 3. Idem
-Ad 4. Export to Excel does not function for all topics due to inconsistensies in the taxonomy
-Ad 5. All text between brackets in preferred terms and synonyms is ingnored when auto-tagging content, therefore some tags have the same name for multiple concepts
-Ad 5. And some tags have the same name due to the not unique preferred terms
